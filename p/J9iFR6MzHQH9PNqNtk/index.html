@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cổng Phụ Huynh - Theo Dõi Học Tập</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<style>
+:root,[data-theme="light"]{
+  --bg:#f8fafc;--bg2:#ffffff;--bg3:#f1f5f9;--border:#e2e8f0;--border2:#f1f5f9;
+  --text:#0f172a;--text2:#334155;--text3:#64748b;--text4:#94a3b8;
+  --primary:#4f46e5;--primary-l:#818cf8;--primary-bg:#eef2ff;
+  --success:#10b981;--success-bg:#d1fae5;--warning:#f59e0b;--warning-bg:#fef3c7;
+  --danger:#ef4444;--danger-bg:#fee2e2;--info:#3b82f6;--info-bg:#dbeafe;
+  --shadow:0 1px 3px rgba(0,0,0,.08);--shadow-md:0 6px 20px rgba(15,23,42,.08);
+  --radius:14px;--radius-sm:10px;
+}
+[data-theme="dark"]{
+  --bg:#0f172a;--bg2:#1e293b;--bg3:#334155;--border:#334155;--border2:#1e293b;
+  --text:#f1f5f9;--text2:#cbd5e1;--text3:#94a3b8;--text4:#64748b;
+  --primary:#818cf8;--primary-l:#a5b4fc;--primary-bg:#312e81;
+  --success:#34d399;--success-bg:#064e3b;--warning:#fbbf24;--warning-bg:#78350f;
+  --danger:#f87171;--danger-bg:#7f1d1d;--info:#60a5fa;--info-bg:#1e3a5f;
+  --shadow:0 1px 3px rgba(0,0,0,.3);--shadow-md:0 6px 20px rgba(0,0,0,.35);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5;}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;}
+.topbar-inner{max-width:980px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem;}
+.brand i{color:var(--primary);font-size:1.25rem;}
+.readonly-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:.75rem;font-weight:600;background:var(--primary-bg);color:var(--primary);}
+[data-theme="dark"] .readonly-badge{color:#c7d2fe;}
+.topbar-actions{display:flex;align-items:center;gap:8px;}
+.btn-icon{width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;}
+.btn-icon:hover{background:var(--bg3);}
+.container{max-width:980px;margin:0 auto;padding:24px 20px 60px;}
+.hero{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);color:white;border-radius:var(--radius);padding:26px;box-shadow:var(--shadow-md);margin-bottom:22px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.hero-avatar{width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:1.7rem;font-weight:800;flex-shrink:0;border:2px solid rgba(255,255,255,.35);}
+.hero-info{flex:1;min-width:220px;}
+.hero-info h1{font-size:1.45rem;font-weight:800;}
+.hero-info p{opacity:.9;font-size:.9rem;margin-top:2px;}
+.hero-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+.hero-pill{background:rgba(255,255,255,.18);backdrop-filter:blur(6px);padding:6px 14px;border-radius:20px;font-size:.82rem;font-weight:600;}
+.progress-wrap{height:9px;background:rgba(255,255,255,.25);border-radius:6px;overflow:hidden;margin-top:12px;max-width:340px;}
+.progress-bar{height:100%;border-radius:6px;background:#34d399;transition:width .5s ease;}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:22px;}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);display:flex;align-items:center;gap:14px;}
+.stat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.stat-icon.purple{background:var(--primary-bg);color:var(--primary);}
+.stat-icon.green{background:var(--success-bg);color:var(--success);}
+.stat-icon.orange{background:var(--warning-bg);color:var(--warning);}
+.stat-icon.red{background:var(--danger-bg);color:var(--danger);}
+.stat-card h3{font-size:1.35rem;font-weight:700;line-height:1.1;}
+.stat-card span{font-size:.76rem;color:var(--text3);}
+.tabs{display:flex;gap:8px;margin-bottom:20px;background:var(--bg2);padding:6px;border-radius:12px;border:1px solid var(--border);}
+.tab-btn{flex:1;padding:10px 14px;border:none;border-radius:8px;background:transparent;color:var(--text3);font-family:inherit;font-size:.88rem;font-weight:600;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.tab-btn.active{background:var(--primary);color:white;box-shadow:0 3px 10px rgba(79,70,229,.28);}
+.tab-pane{display:none;}.tab-pane.active{display:block;}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:18px;overflow:hidden;}
+.card-header{padding:16px 20px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.card-header h2{font-size:1rem;font-weight:700;}
+.card-body{padding:18px 20px;}
+.session-card{border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-bottom:12px;background:var(--bg2);}
+.session-card:last-child{margin-bottom:0;}
+.sc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;}
+.sc-date{font-size:.8rem;font-weight:600;color:var(--text3);}
+.sc-title{font-size:.98rem;font-weight:700;margin-top:4px;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:.74rem;font-weight:600;white-space:nowrap;}
+.badge-success{background:var(--success-bg);color:#065f46;}
+.badge-warning{background:var(--warning-bg);color:#92400e;}
+.badge-danger{background:var(--danger-bg);color:#991b1b;}
+.badge-info{background:var(--info-bg);color:#1e40af;}
+.badge-purple{background:var(--primary-bg);color:#3730a3;}
+[data-theme="dark"] .badge-success{color:#6ee7b7;}
+[data-theme="dark"] .badge-warning{color:#fde68a;}
+[data-theme="dark"] .badge-danger{color:#fca5a5;}
+[data-theme="dark"] .badge-info{color:#93c5fd;}
+[data-theme="dark"] .badge-purple{color:#c7d2fe;}
+.detail-box{margin-top:10px;padding:10px 14px;background:var(--bg3);border-radius:8px;font-size:.85rem;white-space:pre-wrap;}
+.detail-box strong{display:block;font-size:.76rem;color:var(--text3);margin-bottom:3px;text-transform:uppercase;letter-spacing:.3px;}
+.files-wrap{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+.file-chip{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);font-size:.8rem;color:var(--text);}
+.file-chip a{color:var(--primary);text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:4px;}
+.file-chip a:hover{text-decoration:underline;}
+.mat-item{padding:14px 16px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:12px;}
+.mat-item:last-child{margin-bottom:0;}
+.mat-title{font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:8px;}
+.mat-meta{font-size:.78rem;color:var(--text3);margin-top:3px;}
+.empty{text-align:center;padding:34px 16px;color:var(--text4);font-size:.88rem;}
+.empty i{font-size:2.2rem;margin-bottom:10px;display:block;}
+.error-screen{max-width:520px;margin:80px auto;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:36px 28px;text-align:center;box-shadow:var(--shadow-md);}
+.error-screen i{font-size:3rem;color:var(--danger);margin-bottom:14px;}
+.error-screen h2{font-size:1.2rem;margin-bottom:8px;}
+.error-screen p{color:var(--text3);font-size:.9rem;}
+.footer-note{text-align:center;color:var(--text4);font-size:.78rem;margin-top:28px;}
+@media(max-width:640px){.hero{padding:20px;}.tabs{flex-direction:column;}.topbar-inner{padding:12px 14px;}.container{padding:16px 14px 48px;}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><i class="fas fa-graduation-cap"></i> Cổng Phụ Huynh</div>
+    <span class="readonly-badge"><i class="fas fa-lock"></i> Chỉ xem (không chỉnh sửa)</span>
+    <div class="topbar-actions">
+      <button class="btn-icon" onclick="loadParentData()" title="Làm mới dữ liệu"><i class="fas fa-sync-alt"></i></button>
+      <button class="btn-icon" onclick="toggleTheme()" title="Sáng/Tối"><i class="fas fa-moon" id="themeIcon"></i></button>
+    </div>
+  </div>
+</header>
+
+<main class="container" id="app">
+  <div class="empty"><i class="fas fa-spinner fa-spin"></i>Đang tải thông tin học tập...</div>
+</main>
+
+<script>
+function esc(v){
+  return String(v==null?'':v)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+function parseLocalDate(s){
+  if(!s)return new Date();
+  const p=s.split('-').map(Number);
+  if(p.length!==3||p.some(isNaN))return new Date();
+  return new Date(p[0],p[1]-1,p[2]);
+}
+function fmtDateVN(s){if(!s)return'';const[y,m,d]=s.split('-');return`${d}/${m}/${y}`;}
+function dayNameFull(s){return['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'][parseLocalDate(s).getDay()];}
+function fileSizeStr(b){if(!b)return'';if(b<1024)return b+'B';if(b<1048576)return(b/1024).toFixed(1)+'KB';return(b/1048576).toFixed(1)+'MB';}
+function fileIcon(type){
+  if(!type)return'fa-file-alt';
+  if(type.includes('pdf'))return'fa-file-pdf';
+  if(type.includes('word')||type.includes('document'))return'fa-file-word';
+  if(type.includes('sheet')||type.includes('excel'))return'fa-file-excel';
+  if(type.includes('presentation')||type.includes('powerpoint'))return'fa-file-powerpoint';
+  if(type.startsWith('image'))return'fa-file-image';
+  if(type.startsWith('video'))return'fa-file-video';
+  if(type.startsWith('audio'))return'fa-file-audio';
+  return'fa-file-alt';
+}
+function toggleTheme(){
+  const t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+  localStorage.setItem('parent_theme',t);
+  document.getElementById('themeIcon').className=t==='dark'?'fas fa-sun':'fas fa-moon';
+}
+(function(){
+  const t=localStorage.getItem('parent_theme')||'light';
+  document.documentElement.setAttribute('data-theme',t);
+  document.getElementById('themeIcon').className=t==='dark'?'fas fa-sun':'fas fa-moon';
+})();
+
+function getToken(){
+  const m=window.location.pathname.match(/\/phu-huynh\/([A-Za-z0-9_-]+)/);
+  if(m)return m[1];
+  return new URLSearchParams(window.location.search).get('token')||'';
+}
+
+function renderFiles(files){
+  if(!files||!files.length)return'';
+  return`<div class="files-wrap">${files.map(f=>{
+    const viewUrl=f.url||'';
+    const isApi=viewUrl.startsWith('/api/');
+    const dlUrl=viewUrl?(isApi?(viewUrl+(viewUrl.includes('?')?'&':'?')+'download=1'):viewUrl):'';
+    return`<div class="file-chip">
+      <i class="fas ${fileIcon(f.type)}" style="color:var(--primary);"></i>
+      <span>${esc(f.name)} ${f.size?`<small style="color:var(--text4);">(${fileSizeStr(f.size)})</small>`:''}</span>
+      ${viewUrl?`<a href="${esc(viewUrl)}" target="_blank" rel="noopener"><i class="fas fa-eye"></i> Xem</a>
+      <a href="${esc(dlUrl)}" download="${esc(f.name)}"><i class="fas fa-download"></i> Tải</a>`:''}
+    </div>`;
+  }).join('')}</div>`;
+}
+
+let activeTab='progress';
+function switchTab(tab){
+  activeTab=tab;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.toggle('active',p.id==='pane-'+tab));
+}
+
+function renderPortal(data){
+  const st=data.student||{};
+  const stats=data.stats||{};
+  const sessions=Array.isArray(data.sessions)?data.sessions:[];
+  const materials=Array.isArray(data.materials)?data.materials:[];
+  const ratingTxt={excellent:'⭐ Xuất sắc',good:'👍 Tốt',average:'📝 Trung bình',poor:'⚠️ Cần cố gắng'};
+
+  const upcoming=sessions.filter(s=>s.status==='upcoming').sort((a,b)=>a.date.localeCompare(b.date)||a.time.localeCompare(b.time));
+  const completed=sessions.filter(s=>s.status==='completed').sort((a,b)=>b.date.localeCompare(a.date)||b.time.localeCompare(a.time));
+  const cancelled=sessions.filter(s=>s.status==='cancelled').sort((a,b)=>b.date.localeCompare(a.date));
+
+  const sessionFiles=[];
+  sessions.forEach(s=>{
+    (s.files||[]).forEach(f=>sessionFiles.push({session:s,file:f}));
+  });
+
+  const avgPct=stats.avgScore!=null?Math.min(100,Math.max(0,stats.avgScore*10)):0;
+
+  let html=`
+  <section class="hero">
+    <div class="hero-avatar">${esc((st.name||'?').charAt(0).toUpperCase())}</div>
+    <div class="hero-info">
+      <h1>${esc(st.name||'Học sinh')}</h1>
+      <p>${st.class?'Lớp '+esc(st.class)+' • ':''}Môn ${esc(st.subject||'—')}</p>
+      <div class="hero-pills">
+        <span class="hero-pill">📊 Điểm TB hiện tại: ${stats.avgScore!=null?stats.avgScore.toFixed(1):'Chưa có'}</span>
+        <span class="hero-pill">🎯 Mục tiêu: ${st.targetScore!=null?st.targetScore:'Chưa đặt'}</span>
+        <span class="hero-pill">✅ Hoàn thành: ${stats.completed||0}/${stats.totalSessions||0} buổi</span>
+      </div>
+      ${stats.avgScore!=null?`<div class="progress-wrap"><div class="progress-bar" style="width:${avgPct}%;"></div></div>`:''}
+    </div>
+  </section>
+
+  <section class="stats-grid">
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-calendar-check"></i></div><div><h3>${stats.totalSessions||0}</h3><span>Tổng số buổi</span></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-check-circle"></i></div><div><h3>${stats.completed||0}</h3><span>Đã học</span></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-clock"></i></div><div><h3>${stats.upcoming||0}</h3><span>Buổi sắp tới</span></div></div>
+    <div class="stat-card"><div class="stat-icon red"><i class="fas fa-star"></i></div><div><h3>${stats.avgScore!=null?stats.avgScore.toFixed(1):'—'}</h3><span>Điểm trung bình</span></div></div>
+  </section>
+
+  <div class="tabs">
+    <button class="tab-btn ${activeTab==='progress'?'active':''}" data-tab="progress" onclick="switchTab('progress')"><i class="fas fa-chart-line"></i> Tình hình học &amp; Lịch học (${sessions.length})</button>
+    <button class="tab-btn ${activeTab==='materials'?'active':''}" data-tab="materials" onclick="switchTab('materials')"><i class="fas fa-book-open"></i> Tài liệu học tập (${materials.length + sessionFiles.length})</button>
+  </div>
+
+  <div class="tab-pane ${activeTab==='progress'?'active':''}" id="pane-progress">
+    <div class="card">
+      <div class="card-header"><h2><i class="fas fa-clock" style="color:var(--info);margin-right:8px;"></i>Lịch học sắp tới (${upcoming.length})</h2></div>
+      <div class="card-body">
+        ${upcoming.length?upcoming.map(s=>`
+          <div class="session-card">
+            <div class="sc-top">
+              <div>
+                <div class="sc-date">📅 ${dayNameFull(s.date)}, ${fmtDateVN(s.date)} • 🕐 ${esc(s.time)} (${s.duration} phút)</div>
+                <div class="sc-title">${esc(s.subject)} - ${esc(s.topic||'Chưa đặt chủ đề')}</div>
+              </div>
+              <span class="badge badge-info">Sắp tới</span>
+            </div>
+            ${renderFiles(s.files)}
+          </div>`).join(''):'<div class="empty"><i class="fas fa-calendar"></i>Hiện chưa có lịch học sắp tới.</div>'}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h2><i class="fas fa-check-circle" style="color:var(--success);margin-right:8px;"></i>Các buổi đã học &amp; Nhận xét (${completed.length})</h2></div>
+      <div class="card-body">
+        ${completed.length?completed.map(s=>`
+          <div class="session-card">
+            <div class="sc-top">
+              <div>
+                <div class="sc-date">📅 ${dayNameFull(s.date)}, ${fmtDateVN(s.date)} • 🕐 ${esc(s.time)} (${s.duration} phút)</div>
+                <div class="sc-title">${esc(s.subject)} - ${esc(s.topic||'Buổi học')}</div>
+              </div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                ${s.score!=null?`<span class="badge badge-${s.score>=8?'success':s.score>=6?'warning':'danger'}">📊 ${s.score} điểm</span>`:''}
+                ${s.rating?`<span class="badge badge-purple">${ratingTxt[s.rating]||esc(s.rating)}</span>`:''}
+                <span class="badge badge-success">Hoàn thành</span>
+              </div>
+            </div>
+            ${s.completedContent?`<div class="detail-box"><strong>Nội dung đã học</strong>${esc(s.completedContent)}</div>`:''}
+            ${s.evaluation?`<div class="detail-box"><strong>Nhận xét của giáo viên</strong>${esc(s.evaluation)}</div>`:''}
+            ${s.homework?`<div class="detail-box"><strong>Bài tập về nhà</strong>${esc(s.homework)}</div>`:''}
+            ${renderFiles(s.files)}
+          </div>`).join(''):'<div class="empty"><i class="fas fa-clipboard-list"></i>Chưa có buổi học nào hoàn thành.</div>'}
+      </div>
+    </div>
+
+    ${cancelled.length?`
+    <div class="card">
+      <div class="card-header"><h2><i class="fas fa-times-circle" style="color:var(--danger);margin-right:8px;"></i>Các buổi nghỉ (${cancelled.length})</h2></div>
+      <div class="card-body">
+        ${cancelled.map(s=>`
+          <div class="session-card">
+            <div class="sc-top">
+              <div>
+                <div class="sc-date">📅 ${dayNameFull(s.date)}, ${fmtDateVN(s.date)} • 🕐 ${esc(s.time)}</div>
+                <div class="sc-title">${esc(s.subject)} ${s.topic?'- '+esc(s.topic):''}</div>
+              </div>
+              <span class="badge badge-danger">Nghỉ: ${esc(s.cancelReason||'Không rõ')}</span>
+            </div>
+            ${s.cancelDetail?`<div class="detail-box"><strong>Chi tiết</strong>${esc(s.cancelDetail)}</div>`:''}
+          </div>`).join('')}
+      </div>
+    </div>`:''}
+  </div>
+
+  <div class="tab-pane ${activeTab==='materials'?'active':''}" id="pane-materials">
+    <div class="card">
+      <div class="card-header"><h2><i class="fas fa-folder-open" style="color:var(--primary);margin-right:8px;"></i>Tài liệu học tập (${materials.length})</h2></div>
+      <div class="card-body">
+        ${materials.length?materials.map(m=>`
+          <div class="mat-item">
+            <div class="mat-title"><i class="fas fa-book" style="color:var(--primary);"></i> ${esc(m.name)}</div>
+            <div class="mat-meta">${m.className?'Lớp '+esc(m.className):''}${m.createdAt?' • Ngày tạo: '+fmtDateVN(m.createdAt):''}</div>
+            ${m.note?`<div class="detail-box">${esc(m.note)}</div>`:''}
+            ${renderFiles(m.files)}
+          </div>`).join(''):'<div class="empty"><i class="fas fa-folder-open"></i>Chưa có tài liệu riêng trong mục Tài liệu.</div>'}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h2><i class="fas fa-paperclip" style="color:var(--info);margin-right:8px;"></i>Tài liệu đính kèm theo từng buổi học (${sessionFiles.length})</h2></div>
+      <div class="card-body">
+        ${sessionFiles.length?sessionFiles.map(item=>`
+          <div class="mat-item">
+            <div class="mat-title">${esc(item.session.subject)} - ${esc(item.session.topic||'Buổi học')}</div>
+            <div class="mat-meta">📅 ${dayNameFull(item.session.date)}, ${fmtDateVN(item.session.date)} • ${esc(item.session.time)}</div>
+            ${renderFiles([item.file])}
+          </div>`).join(''):'<div class="empty"><i class="fas fa-file"></i>Chưa có file đính kèm trong các buổi học.</div>'}
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">🔒 Trang thông tin chỉ xem dành cho Phụ huynh${data.generatedAt?' • Cập nhật: '+esc(new Date(data.generatedAt).toLocaleString('vi-VN')):''}</div>
+  `;
+
+  document.title=`Học tập - ${st.name||'Phụ huynh'}`;
+  document.getElementById('app').innerHTML=html;
+}
+
+function renderError(msg){
+  document.getElementById('app').innerHTML=`
+    <div class="error-screen">
+      <i class="fas fa-lock"></i>
+      <h2>Không thể truy cập trang chia sẻ</h2>
+      <p>${esc(msg)}</p>
+    </div>`;
+}
+
+async function loadParentData(){
+  const token=getToken();
+  const url=token?('/api/parent/'+encodeURIComponent(token)):('./data.json?v='+Date.now());
+  try{
+    const res=await fetch(url,{cache:'no-store'});
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok){
+      renderError(data.error||'Liên kết chia sẻ không tồn tại hoặc giáo viên đã tắt chia sẻ.');
+      return;
+    }
+    renderPortal(data);
+  }catch(e){
+    renderError(token?'Không kết nối được tới máy chủ giáo viên. Vui lòng thử lại sau.':'Không tải được dữ liệu học tập. Vui lòng thử tải lại trang sau vài giây.');
+  }
+}
+
+loadParentData();
+</script>
+</body>
+</html>
